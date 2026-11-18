@@ -1,0 +1,211 @@
+{
+  "type": "plugin",
+  "id": "io.github.fdkgenie.graph-view",
+  "name": "Graph View",
+  "version": "1.0.0",
+  "apiVersion": "2",
+  "settingsUi": "host",
+  "description": "Visualize internal note links, WikiLinks, backlinks, tags, and attachments as an interactive force-directed Global and Local Graph.",
+  "locales": {
+    "zh-CN": {
+      "name": "关系图谱",
+      "description": "以交互式力导向图谱可视化笔记链接、反向链接、标签与附件网络，支持全局图谱与局部邻域视图。"
+    },
+    "vi": {
+      "name": "Biểu đồ liên kết",
+      "description": "Trực quan hóa mạng lưới liên kết ghi chú, thẻ và tệp đính kèm với biểu đồ toàn cục và cục bộ."
+    }
+  },
+  "author": "fdkgenie",
+  "entry": "./main.js",
+  "platforms": ["web", "desktop"],
+  "permissions": [
+    "notes:read",
+    "metadata:read",
+    "resources:read",
+    "editor:read",
+    "ui:commands",
+    "ui:navigation",
+    "ui:notices",
+    "ui:panels",
+    "storage"
+  ],
+  "settings": {
+    "fields": [
+      {
+        "key": "general.default-mode",
+        "type": "select",
+        "label": "Default Graph Mode",
+        "description": "Initial mode when opening Graph View from the panel menu.",
+        "default": "global",
+        "options": [
+          { "value": "global", "label": "Global Graph" },
+          { "value": "local", "label": "Local Graph" }
+        ],
+        "locales": {
+          "zh-CN": {
+            "label": "默认图谱模式",
+            "description": "从插件菜单打开关系图谱时的默认视图模式。",
+            "options": {
+              "global": "全局图谱",
+              "local": "局部图谱"
+            }
+          },
+          "vi": {
+            "label": "Chế độ mặc định",
+            "description": "Chế độ hiển thị khi mở Biểu đồ liên kết từ menu plugin.",
+            "options": {
+              "global": "Biểu đồ toàn cục",
+              "local": "Biểu đồ cục bộ"
+            }
+          }
+        }
+      },
+      {
+        "key": "general.local-depth",
+        "type": "number",
+        "label": "Default Local Depth",
+        "description": "Number of link hops shown around the focal note in Local Graph mode (1–5).",
+        "default": 1,
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "locales": {
+          "zh-CN": {
+            "label": "默认局部深度",
+            "description": "局部图谱围绕焦点笔记展示的连接跳数（1–5）。"
+          },
+          "vi": {
+            "label": "Độ sâu cục bộ mặc định",
+            "description": "Số bước nhảy liên kết quanh ghi chú trung tâm ở chế độ cục bộ (1–5)."
+          }
+        }
+      },
+      {
+        "key": "general.max-notes",
+        "type": "number",
+        "label": "Max Indexed Notes",
+        "description": "Maximum number of recently updated notes loaded into the graph index.",
+        "default": 1000,
+        "min": 50,
+        "max": 5000,
+        "step": 50,
+        "locales": {
+          "zh-CN": {
+            "label": "最大索引笔记数",
+            "description": "加载到图谱索引中的最近更新笔记数量上限。"
+          },
+          "vi": {
+            "label": "Số ghi chú lập chỉ mục tối đa",
+            "description": "Số lượng ghi chú cập nhật gần đây tối đa được nạp vào chỉ mục biểu đồ."
+          }
+        }
+      },
+      {
+        "key": "filters.show-tags",
+        "type": "boolean",
+        "label": "Show Tags",
+        "description": "Display tag nodes connected to notes.",
+        "default": false,
+        "locales": {
+          "zh-CN": {
+            "label": "显示标签",
+            "description": "将标签作为节点展示并与对应笔记相连。"
+          },
+          "vi": {
+            "label": "Hiển thị thẻ",
+            "description": "Hiển thị các nút thẻ kết nối với ghi chú."
+          }
+        }
+      },
+      {
+        "key": "filters.show-attachments",
+        "type": "boolean",
+        "label": "Show Attachments",
+        "description": "Display image and file attachment nodes.",
+        "default": false,
+        "locales": {
+          "zh-CN": {
+            "label": "显示附件",
+            "description": "显示图片和文件附件节点。"
+          },
+          "vi": {
+            "label": "Hiển thị tệp đính kèm",
+            "description": "Hiển thị các nút hình ảnh và tệp đính kèm."
+          }
+        }
+      },
+      {
+        "key": "filters.existing-files-only",
+        "type": "boolean",
+        "label": "Existing Files Only",
+        "description": "Hide unresolved WikiLinks and missing note targets.",
+        "default": false,
+        "locales": {
+          "zh-CN": {
+            "label": "仅显示已存在笔记",
+            "description": "隐藏尚未创建的双链与缺失目标节点。"
+          },
+          "vi": {
+            "label": "Chỉ tệp hiện có",
+            "description": "Ẩn các WikiLink chưa được tạo và liên kết đích bị thiếu."
+          }
+        }
+      },
+      {
+        "key": "filters.show-orphans",
+        "type": "boolean",
+        "label": "Show Orphans",
+        "description": "Include notes with no incoming or outgoing connections.",
+        "default": true,
+        "locales": {
+          "zh-CN": {
+            "label": "显示孤立笔记",
+            "description": "保留没有任何出入链接的孤立笔记。"
+          },
+          "vi": {
+            "label": "Hiển thị ghi chú cô lập",
+            "description": "Giữ lại các ghi chú không có liên kết đi hoặc đến."
+          }
+        }
+      },
+      {
+        "key": "filters.excluded-patterns",
+        "type": "text",
+        "label": "Excluded Patterns",
+        "description": "Comma- or newline-separated search queries to hide matching notes (e.g. path:Archive, tag:#draft).",
+        "default": "",
+        "placeholder": "Archive/, tag:#draft",
+        "locales": {
+          "zh-CN": {
+            "label": "排除规则",
+            "description": "用逗号或换行分隔的查询规则，用于隐藏匹配的笔记（例如 path:Archive, tag:#draft）。",
+            "placeholder": "Archive/, tag:#draft"
+          },
+          "vi": {
+            "label": "Mẫu loại trừ",
+            "description": "Các truy vấn cách nhau bằng dấu phẩy hoặc xuống dòng để ẩn ghi chú khớp (ví dụ: path:Archive, tag:#draft).",
+            "placeholder": "Archive/, tag:#draft"
+          }
+        }
+      },
+      {
+        "key": "display.show-arrows",
+        "type": "boolean",
+        "label": "Show Link Arrows",
+        "description": "Render directional arrowheads along edges.",
+        "default": false,
+        "locales": {
+          "zh-CN": {
+            "label": "显示方向箭头",
+            "description": "在连线上绘制指向目标节点的箭头。"
+          },
+          "vi": {
+            "label": "Hiển thị mũi tên liên kết",
+            "description": "Hiển thị mũi tên chỉ hướng trên các đường nối."
+          }
+        }
+      }
+    ]
+  }
+}
